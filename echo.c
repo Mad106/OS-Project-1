@@ -12,8 +12,9 @@ void Echo(int size, char ** args)
 
 	/* skip args[0] because that's the echo command
 	 * print args[1]-arg[size-1] */
-	for(int i = 1; i < size; ++i) 	
+	for(int i = 1; i < size; ++i){
 		printf("%s ",args[i]);
+	}
 
 	// print new line for formatting
 	printf("\n");

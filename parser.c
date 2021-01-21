@@ -42,6 +42,7 @@ int main()
 
 		tokenlist *tokens = get_tokens(input);
 		for (int i = 0; i < tokens->size; i++) {
+			tokens->items[i] = EVar(tokens->items[i]);
 			printf("token %d: (%s)\n", i, tokens->items[i]);
 		}
 

@@ -15,5 +15,6 @@ void Echo(int, char**);
 void Prompt();
 void Parse();
 char * Tilde();
+char* EVar(const char *name);
 
 #endif
