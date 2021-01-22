@@ -9,6 +9,7 @@ void Echo(int size, char ** args)
 	 * The for loop goes through each of the elements 
 	 * of args, which are the individual tokens entered
 	 * by the user, and prints them followed by a space
+	*/
 
 	/* skip args[0] because that's the echo command
 	 * print args[1]-arg[size-1] */

@@ -1,15 +1,19 @@
 CC = gcc
-FLAGS = -Wall -Wextra -pedantic -std=c99 -I.
+FLAGS = -Wall -Wextra -pedantic -std=c99
 
-shell.x: parser.o echo.o prompt.o tilde.o
-	$(CC) $(FLAGS) -o shell parser.o echo.o prompt.o tilde.o
-tilde.o: tilde.c
-	$(CC) $(FLAGS) -c tilde.c
-echo.o: echo.c
-	$(CC) $(FLAGS) -c echo.c
-prompt.o: prompt.c
-	$(CC) $(FLAGS) -c prompt.c
-parser.o: parser.c
+shell: parser.o prompt.o echo.o tilde.o path.o evariables.o
+	$(CC) $(FLAGS) -o shell parser.o prompt.o echo.o tilde.o path.o evariables.o
+parser.o: parser.c shell.h
 	$(CC) $(FLAGS) -c parser.c
+prompt.o: prompt.c shell.h
+	$(CC) $(FLAGS) -c prompt.c
+echo.o: echo.c shell.h
+	$(CC) $(FLAGS) -c echo.c
+tilde.o: tilde.c shell.h
+	$(CC) $(FLAGS) -c tilde.c
+path.o: path.c shell.h
+	$(CC) $(FLAGS) -c path.c
+evariables.o: evariables.c shell.h
+	$(CC) $(FLAGS) -c evariables.c
 clean:
 	rm -rf *.o shell

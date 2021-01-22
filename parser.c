@@ -42,36 +42,13 @@ int main()
 
 		tokenlist *tokens = get_tokens(input);
 		for (int i = 0; i < tokens->size; i++) {
-			tokens->items[i] = EVar(tokens->items[i]);
+	//		tokens->items[i] = EVar(tokens->items[i]);
 			printf("token %d: (%s)\n", i, tokens->items[i]);
 		}
 
+		// pass tokenlist to Path() to locate and run command
+		Path(tokens->items);
 
-		/* This if-else tree is being used to test the functions
-		 * as they're written. */
-		if(strcmp("exit", tokens->items[0]) == 0)
-		{
-			// if exit command given, free resources and exit shell
-			free(input);
-			free_tokens(tokens);
-			return 0;
-		}
-		else if(strcmp("echo", tokens->items[0]) == 0)
-		{
-			/* if echo, call echo function and pass tokens size
-			 * and items. Both are needed to properly print
-			 * contents. */
-			Echo(tokens->size, tokens->items);
-		}
-		else if(strcmp("~", tokens->items[0]) == 0)
-		{
-			/* Tilde() simply returns the cstring of
-			 * the environmental HOME variable. A
-			 * different implementation may be needed, but
-			 * I think it's only use is printing to std out
-			 */
-			printf("%s\n", Tilde());
-		}
 		free(input);
 		free_tokens(tokens);
 	}

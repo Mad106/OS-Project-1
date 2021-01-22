@@ -16,5 +16,6 @@ void Prompt();
 void Parse();
 char * Tilde();
 char* EVar(const char *name);
+void Path(char**);
 
 #endif
