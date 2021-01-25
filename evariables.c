@@ -8,17 +8,11 @@ const char* EVar(const char *name)
 		char* temp = (char*) malloc(sizeof(name) - 1);
 		for(size_t i = 1; i < sizeof(name); i++)
 			temp[i-1] = name[i];
-		char* token = temp;
+		char* token = (char*) malloc(strlen(getenv(temp)));
+		strcpy(token, getenv(temp));
 		free(temp);
-		return getenv(token);
+
+		return token;
 	}else
 		return name;
 }
-
-
-/* One last thing: you may not be working with a copy of the environment variable.
- * I had the same syntax in path.c and ended up erasing the contents of $PATH.
- * I'm not sure if you've had any of these issues on your end, but if you run into
- * them, I've got a couple ideas if you want to call before monday and brainstorm
- * for a bit. Let me know!
-*/
