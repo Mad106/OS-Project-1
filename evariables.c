@@ -5,14 +5,27 @@ const char* EVar(const char *name)
 {
 	//only return something different if starts with '$'
 	if(name[0] == '$'){
-		char* temp = (char*) malloc(sizeof(name) - 1);
-		for(size_t i = 1; i < sizeof(name); i++)
-			temp[i-1] = name[i];
-		char* token = (char*) malloc(strlen(getenv(temp)));
-		strcpy(token, getenv(temp));
-		free(temp);
+		char* var = getenv(&name[1]);
+		int len = strlen(var);
+		char* token = (char*) malloc(sizeof(char) * len);
+		memset(token, 0, sizeof(char) * len);
+		strcpy(token, var);
+		free((char*)name);
 
 		return token;
-	}else
+	} else if(name[0] == '~') {
+		char * homeVar = getenv("HOME");
+		/* Find total length of the result string */
+		int totalLen = strlen(&name[1]) + strlen(homeVar) + 1;
+		char* token = (char*) malloc(sizeof(char) * totalLen);
+		memset(token, 0, sizeof(char) * totalLen);
+		strcpy(token, homeVar);
+		strcat(token, &name[1]);
+		free((char*)name);
+
+		return token;
+	} else {
+		
 		return name;
+	}
 }
