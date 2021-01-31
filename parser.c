@@ -12,20 +12,25 @@
 #include <string.h>
 #include "shell.h"
 
-typedef struct {
-	int size;
-	char **items;
-} tokenlist;
+
+
+extern char* strdup(const char*);
 
 char *get_input(void);
 tokenlist *get_tokens(char *input);
 
 tokenlist *new_tokenlist(void);
+tokenlist *clone_tokenlist(tokenlist *);
 void add_token(tokenlist *tokens, char *item);
 void free_tokens(tokenlist *tokens);
 
+static bgjobslist bg;
+
 int main()
 {
+    bg.size = 0;
+    bg.jobs = NULL;
+    
 	while(1)
 	{
 		// print the required prompt values
@@ -38,20 +43,27 @@ int main()
 		 */
 
 		char *input = get_input();
-		printf("whole input: %s\n", input);
+		/* printf("whole input: %s\n", input); */
 
 		tokenlist *tokens = get_tokens(input);
-
+		/*printf("%d\n", tokens->size);
 		for (int i = 0; i < tokens->size; i++) {		
-			tokens->items[i] = EVar(tokens->items[i]);
+			tokens->items[i] = (char*)EVar(tokens->items[i]);
 			printf("token %d: (%s)\n", i, tokens->items[i]);
-		}
-
-		// pass tokenlist to Path() to locate and run command
-		Path(tokens->items);
+		}*/
 
 		free(input);
+
+		if(tokens->size > 0)
+		// pass tokenlist to Path() to locate and run command
+		Path(tokens, &bg);
+
+		
 		free_tokens(tokens);
+	}
+	for(int i = 0; i < bg.size; ++i) {
+		free_tokens(bg.jobs[i]->tokens);
+		free(bg.jobs[i]);
 	}
 	
 	return 0;
@@ -66,16 +78,31 @@ tokenlist *new_tokenlist(void)
 	return tokens;
 }
 
+tokenlist *clone_tokenlist(tokenlist *tokens) {
+	tokenlist *newtokens = (tokenlist *) malloc(sizeof(tokenlist));
+	newtokens->size = 0;
+	newtokens->items = (char **) malloc(sizeof(char *) * (tokens->size + 1));
+	newtokens->items[tokens->size] = NULL; /* make NULL terminated */
+	
+	for(int i = 0; i < tokens->size; ++i) {
+		newtokens->items[i] = strdup(tokens->items[i]);
+	}
+	newtokens->size = tokens->size;
+	
+	return newtokens;
+}
+
 void add_token(tokenlist *tokens, char *item)
 {
 	int i = tokens->size;
+	int itemLen = strlen(item);
 
 	tokens->items = (char **) realloc(tokens->items, (i + 2) * sizeof(char *));
-	tokens->items[i] = (char *) malloc(strlen(item) + 1);
-	tokens->items[i + 1] = NULL;
+	tokens->items[i] = (char *) malloc(itemLen + 1);
+	memset(tokens->items[i], 0, sizeof(char) * itemLen);
 	strcpy(tokens->items[i], item);
-
-	tokens->size += 1;
+	tokens->items[i + 1] = NULL;
+	++tokens->size;
 }
 
 char *get_input(void)
@@ -108,7 +135,9 @@ char *get_input(void)
 
 tokenlist *get_tokens(char *input)
 {
-	char *buf = (char *) malloc(strlen(input) + 1);
+	int len = strlen(input);
+	char *buf = (char *) malloc(len + 1);
+	memset(buf, 0, len + 1);
 	strcpy(buf, input);
 
 	tokenlist *tokens = new_tokenlist();
