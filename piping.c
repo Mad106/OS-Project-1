@@ -3,5 +3,5 @@
 
 void Piping(char* token1, char* token2)
 {
-	
+	return;
 }

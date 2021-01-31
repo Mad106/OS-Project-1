@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 
 #ifndef _SHELL_H
 #define _SHELL_H
@@ -37,5 +38,7 @@ const char* EVar(const char *name);
 void Path(tokenlist *tokens, bgjobslist* jobs);
 /* Background jobs function */
 void Jobs(bgjobslist* jobs, int showAll);
+void CD(tokenlist* tokens);
+void Piping(char* token1, char* token2);
 
 #endif

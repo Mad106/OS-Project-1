@@ -267,12 +267,12 @@ void Path(tokenlist *tokens, bgjobslist* bg)
 	}		
 		
 	//checking to see if piping should be implemented
-	for(int j = 0; tokens[j] != NULL; j++){
-		if(tokens[j] == '|')
-			Piping(tokens[j - 1],tokens[j + 1]);
+	for(int j = 0; tokens->items[j] != NULL; j++){
+		if(tokens->items[j] == '|')
+			Piping(tokens->items[j - 1],tokens->items[j + 1]);
 	}
 	
-	if(tokens[0] == "cd")
+	if(tokens->items[0] == "cd")
 		CD(tokens);
 	
 	/* If this point is reached, the command could not be found.
