@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 
@@ -30,15 +31,19 @@ typedef struct {
     bgjob_t** jobs;
 } bgjobslist;
 
+// shell start time
+time_t shellStart;
+
 void Echo(int, char**);
 void Prompt();
 void Parse();
 char * Tilde();
 const char* EVar(const char *name);
-void Path(tokenlist *tokens, bgjobslist* jobs);
+void Path(tokenlist *tokens, bgjobslist* jobs, long * longestProc, time_t procStart);
 /* Background jobs function */
 void Jobs(bgjobslist* jobs, int showAll);
 void CD(tokenlist* tokens);
 void Piping(char* token1, char* token2);
+void Exit();
 
 #endif

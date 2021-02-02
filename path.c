@@ -15,7 +15,7 @@ extern tokenlist *clone_tokenlist(tokenlist *tokens) ;
 extern void free_tokens(tokenlist *tokens);
 
 
-void Path(tokenlist *tokens, bgjobslist* bg)
+void Path(tokenlist *tokens, bgjobslist* bg, long * longestProc, time_t procStart)
 {
 	static int jobId = 1;
 
@@ -207,6 +207,13 @@ void Path(tokenlist *tokens, bgjobslist* bg)
 		
 		/* Wait for childs and exit */
 		waitpid(-1, NULL, 0);
+
+		// get exit time
+		time_t shellEnd;
+		time(&shellEnd);
+		time_t shellRun = shellEnd - shellStart;
+		long longestProc = 0;
+		printf("Shell ran for %li seconds and took %li seconds to execute one command.\n", shellRun, longestProc);
 		exit(0);
 	}
 	

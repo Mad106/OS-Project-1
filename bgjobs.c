@@ -8,7 +8,7 @@ extern void free_tokens(tokenlist *tokens);
 
 void Jobs(bgjobslist* bg, int showAll) {
 
-	if(bg== NULL) return;
+	if(bg == NULL) return;
 	int activeJobs = 0;
 	for(int i = 0; i < bg->size; ++i) {
 		/* Get status of the child */

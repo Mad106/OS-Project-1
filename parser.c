@@ -1,12 +1,3 @@
-/* The easiest way I found to start a driver program was using parser.c. If you can 
- * think of a better way, please feel free to implement that method!
- * Right now the if-else tree is exclusively to test
- * the functions as they're being written. Once the parsing func is written, we should
- * be able to start properly writing this driver to behave the way it needs to. When
- * you get a chance, please review echo, prompt, and tilde to see if I missed anything.
- * Feel free to reach out if you have any questions about what I've written so far,
- * and I'll get back to you ASAP. -Ryan */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,11 +19,23 @@ static bgjobslist bg;
 
 int main()
 {
+    // get shell start time
+    time(&shellStart);
+
     bg.size = 0;
     bg.jobs = NULL;
-    
+  
+
+   // setup variable to keep track of longest process
+   long * longestProc;
+   longestProc = 0;
+
 	while(1)
 	{
+		// process start var
+		time_t procStart;
+		time(&procStart);
+	
 		// print the required prompt values
 		Prompt();
 
@@ -56,7 +59,7 @@ int main()
 
 		if(tokens->size > 0)
 		// pass tokenlist to Path() to locate and run command
-		Path(tokens, &bg);
+		Path(tokens, &bg, longestProc, procStart);
 
 		
 		free_tokens(tokens);
