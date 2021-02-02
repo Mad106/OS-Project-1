@@ -174,14 +174,14 @@ void Path(tokenlist *tokens, bgjobslist* bg)
 	free(separatedPaths);
 	
 	/* Build in functions */
+	
+	printf("tokens->items[0] is %s\n",tokens->items[0]);
+	printf("tokens->items[1] is %s\n",tokens->items[1]);
+	printf("tokens->items[2] is %s\n",tokens->items[2]);
+	
 	if(strcmp(tokens->items[0], "cd") == 0) {
-		/* Two step process */
-		/* 1. Change dir */
-		chdir(tokens->items[1]);
-		/* 2. Set new PWD */
-		char* cwd = getcwd(NULL, 0);
-		setenv("PWD", cwd, 1);
-		free(cwd);
+		CD(tokens);
+		printf("CD was called\n");
 
 		/* Check background jobs */
 		Jobs(bg, 0); /* Zero for "SHOW ONLY COMPLETED", One for "SHOW ALL" */
@@ -268,12 +268,10 @@ void Path(tokenlist *tokens, bgjobslist* bg)
 		
 	//checking to see if piping should be implemented
 	for(int j = 0; tokens->items[j] != NULL; j++){
-		if(tokens->items[j] == '|')
+		if(strcmp(tokens->items[j],"|") == 0)
 			Piping(tokens->items[j - 1],tokens->items[j + 1]);
 	}
 	
-	if(tokens->items[0] == "cd")
-		CD(tokens);
 	
 	/* If this point is reached, the command could not be found.
 	 * Print error message and free resources
