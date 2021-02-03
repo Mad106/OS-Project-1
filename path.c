@@ -198,13 +198,19 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					printf("[%d] %d\n", jobId, pid);
 					++bg->size;
 					++jobId;
-
 					//waitpid(pid, NULL, WNOHANG);
 				} 
 				else 
 				{
 					/* Wait for child */
 					waitpid(pid, NULL, 0);
+
+					// calculate program run time
+					time_t procEnd;
+					time(&procEnd);
+					long procTime = 0;
+					procTime = procEnd - procStart;
+					if(procTime > longestProc) longestProc = procTime;
 				}
 			}
 
