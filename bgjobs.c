@@ -6,7 +6,7 @@
 
 extern void free_tokens(tokenlist *tokens);
 
-void Jobs(bgjobslist* bg, int showAll) {
+void Jobs(bgjobslist* bg, int showAll, time_t procStart) {
 
 	if(bg == NULL) return;
 	int activeJobs = 0;
@@ -20,6 +20,12 @@ void Jobs(bgjobslist* bg, int showAll) {
 
 		/* Print job information if we should print any type of job (completed/running) OR current status of job is "done" */
 		if(showAll || status != 0) {
+			// check for longest proc time
+			time_t procEnd;
+			time(&procEnd);
+			long procTime = procEnd - procStart;
+			if(procTime > longestProc) longestProc = procTime;
+	
 			printf("[%d] %s\t", bg->jobs[i]->jobId, (status == 0 ? "Running" : "Done"));
 			for(int j = 0; j < totalTokens; ++j) {
 				printf("%s", bg->jobs[i]->tokens->items[j]);

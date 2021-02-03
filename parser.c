@@ -3,13 +3,9 @@
 #include <string.h>
 #include "shell.h"
 
-
-
 extern char* strdup(const char*);
-
 char *get_input(void);
 tokenlist *get_tokens(char *input);
-
 tokenlist *new_tokenlist(void);
 tokenlist *clone_tokenlist(tokenlist *);
 void add_token(tokenlist *tokens, char *item);
@@ -27,7 +23,6 @@ int main()
   
 
    // setup variable to keep track of longest process
-   long * longestProc;
    longestProc = 0;
 
 	while(1)
@@ -57,11 +52,10 @@ int main()
 
 		free(input);
 
-		if(tokens->size > 0)
 		// pass tokenlist to Path() to locate and run command
-		Path(tokens, &bg, longestProc, procStart);
+		if(tokens->size > 0)
+			Path(tokens, &bg, procStart);
 
-		
 		free_tokens(tokens);
 	}
 	for(int i = 0; i < bg.size; ++i) {

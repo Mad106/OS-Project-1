@@ -31,17 +31,18 @@ typedef struct {
     bgjob_t** jobs;
 } bgjobslist;
 
-// shell start time
+// shell start time and longes process measurement
 time_t shellStart;
+long longestProc;
 
 void Echo(int, char**);
 void Prompt();
 void Parse();
 char * Tilde();
 const char* EVar(const char *name);
-void Path(tokenlist *tokens, bgjobslist* jobs, long * longestProc, time_t procStart);
+void Path(tokenlist *tokens, bgjobslist* jobs, time_t procStart);
 /* Background jobs function */
-void Jobs(bgjobslist* jobs, int showAll);
+void Jobs(bgjobslist* jobs, int showAll, time_t procStart);
 void CD(tokenlist* tokens);
 void Piping(char* token1, char* token2);
 void Exit();
