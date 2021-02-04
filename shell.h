@@ -44,7 +44,6 @@ void Path(tokenlist *tokens, bgjobslist* jobs, time_t procStart);
 /* Background jobs function */
 void Jobs(bgjobslist* jobs, int showAll, time_t procStart);
 void CD(tokenlist* tokens);
-void Piping(char* token1, char* token2);
 void Exit();
 
 #endif
