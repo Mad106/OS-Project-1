@@ -29,11 +29,12 @@ Part 6:
  - Jessica Mitchell
  - Ryan Lazzari
 Part 7:
- - Ryan Lazzari
+ - Jessica Mitchell
 Part 8:
  - Madison Sayles
 Part 9:
  - Jessia Mitchell
+ - Ryan Lazzari	
 Part 10:
  - Madison Sayles (cd command)
  - Ryan Lazzari (exit function)
@@ -42,12 +43,13 @@ Part 10:
 
 Tar Archive
 -----------
-Conents of tar:
+Conents of tar: Makefile, readme, bgjobs.c, cd.c, echo.c, evariables.c, parser.c, path.c, prompt.c, shell.h, tilde.c
 
 
 How to use makefile
 -------------------
-
+The make command will compile all necessary files into an executable named shell. To run the shell, just enter "shell". To clean up
+after execution, just type "make clean".
 
 
 Known Bugs/Incomplete Parts
@@ -62,3 +64,4 @@ Special Considerations
 
 Extra Credit
 ------------
+ - Can execute shell from within shell process repeatedly
