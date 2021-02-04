@@ -1,0 +1,206 @@
+commit ea3d019f9b64e0c336bea65f9df44bf11897143a
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Thu Feb 4 17:37:53 2021 -0500
+
+    Removed unnecessary include statements and adjusted line lengths to conform to
+    style guidelines
+
+commit 83834e02ac528173c200d1627d9e7db1493d114e
+Author: lazzarir <52900516+lazzarir@users.noreply.github.com>
+Date:   Wed Feb 3 18:06:08 2021 -0500
+
+    Delete exit.c
+
+commit ad99be1fc47ba01674c115a91709f0eef843c56a
+Merge: 3626d71 e57cfe1
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Wed Feb 3 18:04:45 2021 -0500
+
+    Merge branch 'main' of https://github.com/Mad106/OS-Project-1 into main
+    
+    Conflicts:
+    	makefile
+    
+    Removed exit.c from makefile
+
+commit 3626d7190306915a0f39b179df7b60492ecbca6e
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Wed Feb 3 18:02:14 2021 -0500
+
+    Added longest process timer
+
+commit e57cfe1c5c1cf5a47448c3da0ebd33d75f4bb53d
+Author: lazzarir <52900516+lazzarir@users.noreply.github.com>
+Date:   Wed Feb 3 17:40:00 2021 -0500
+
+    Update makefile
+
+commit 9a7948f124ec8479ad08283936246b5a4c2c963b
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Wed Feb 3 12:30:38 2021 -0500
+
+    updated path.c and readme, added shell timer
+
+commit 1e7d4a53714b6abb01d033ab5df828d6453108da
+Merge: 3acb2b4 fbd680f
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Tue Feb 2 17:19:17 2021 -0500
+
+    Merge branch 'main' of https://github.com/Mad106/OS-Project-1 into main
+    
+    Updated readme and added shell timer
+
+commit 3acb2b4c8cf6362219cca6fd0ac118640dbfdb36
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Tue Feb 2 17:18:59 2021 -0500
+
+    Update readme and add shell timer
+
+commit fbd680fecb3e2664b3f2ff34d542668ac3a67218
+Author: Madison Sayles <msayles123@gmail.com>
+Date:   Mon Feb 1 19:46:29 2021 -0500
+
+    making changes to cd
+
+commit b7a6e81e4d8e1b130af58edea003c50b2be1af9d
+Author: lazzarir <52900516+lazzarir@users.noreply.github.com>
+Date:   Sun Jan 31 15:55:36 2021 -0500
+
+    Update cd.c
+
+commit 50aca22099a293865bd9736497785774e8d02e7f
+Author: Madison Sayles <msayles123@gmail.com>
+Date:   Sun Jan 31 15:20:04 2021 -0500
+
+    problems with cd
+
+commit 893054be6f62c7baa8cb52b270c9dbe2284cd220
+Merge: cdceabd 5ecb333
+Author: Madison Sayles <msayles123@gmail.com>
+Date:   Sun Jan 31 13:48:02 2021 -0500
+
+    Merge branch 'main' of https://github.com/Mad106/OS-Project-1 into main
+
+commit cdceabd65b5a415032bc3ba15a8520a89ea9d4e0
+Author: Madison Sayles <msayles123@gmail.com>
+Date:   Sun Jan 31 13:47:43 2021 -0500
+
+    save before pulling changes
+
+commit 5ecb3336ccd77bbf3c1edbdd6dce472423e83e3c
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sat Jan 30 20:57:08 2021 -0500
+
+    added structs to account for job functions
+
+commit 7f19a7dd235e4552754488b6d6f1687d5f433b94
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sat Jan 30 20:55:02 2021 -0500
+
+    Updated to account for the jobs function
+
+commit 9e259fd8e7885fb062cc4b7755395584eb154b97
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sat Jan 30 20:50:52 2021 -0500
+
+    added more functions to deal with tokens
+
+commit 1c31228e94e8edcf9e801262de927c8fa85303b0
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sat Jan 30 20:40:56 2021 -0500
+
+    added bgjobs
+
+commit bc2fdc5b7ebb7b8ee77c7f32f64e3b7c7d812f93
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sat Jan 30 20:39:36 2021 -0500
+
+    Updated and added else if to find length of string
+
+commit a9e880c54c44157ed6ae29e3a58e20e1c913a1fb
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sat Jan 30 20:37:27 2021 -0500
+
+    jobs built-in function
+
+commit aaf73d1cc26fc4dcafbd93f658b2b0c42743c45b
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sat Jan 30 20:36:23 2021 -0500
+
+    Add files via upload
+    
+    jobs built-in function
+
+commit ee1b7cd6acae35a889a27acfdc04d282fccf502b
+Merge: 1c27d69 85e7958
+Author: Madison Sayles <msayles123@gmail.com>
+Date:   Thu Jan 28 13:22:22 2021 -0500
+
+    updating before continuing to parts 8 and 10
+
+commit 1c27d69067f255bd004c16495f87c307d22f8a97
+Author: Madison Sayles <msayles123@gmail.com>
+Date:   Thu Jan 28 13:21:46 2021 -0500
+
+    updating before continuing to parts 8 and 10
+
+commit 85e7958c5d3dd2495e9918c3bae68e46cab54173
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Sun Jan 24 21:41:44 2021 -0500
+
+    Minor adjustment to evar
+
+commit e874b4d2b1b0eba9ba3dcb41035dc689266d50ab
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sun Jan 24 19:03:29 2021 -0500
+
+    Update readme
+
+commit 4724e43164391347a1c8c40cda7a46e9290d69bd
+Author: Jessica Mitchell <42589541+MITCHELLNJESS@users.noreply.github.com>
+Date:   Sun Jan 24 18:57:53 2021 -0500
+
+    Update readme
+
+commit 2a602424c23aee00c3cdc5c0cec06b967d9eca96
+Author: Madison Sayles <msayles123@gmail.com>
+Date:   Sun Jan 24 12:02:51 2021 -0500
+
+    fixed issues with evar
+
+commit d72c92432490e3c7b7c178b7408e09556be367eb
+Author: lazzarir <52900516+lazzarir@users.noreply.github.com>
+Date:   Fri Jan 22 02:27:00 2021 -0500
+
+    Update parser.c
+
+commit fc57fda25b8107bb282952c3c017a763a052cbce
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Fri Jan 22 02:25:20 2021 -0500
+
+    Added path.c
+
+commit 61dff5f3ab4452b9a0fdfbf8d98836c1d05f5bd6
+Author: Madison Sayles <msayles123@gmail.com>
+Date:   Thu Jan 21 13:15:47 2021 -0500
+
+    adding environment variable function
+
+commit bcab6cd7d47a2d8198c4ab155a6687d7d9d1b38f
+Merge: c0fbfa4 55657d6
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Tue Jan 19 05:06:03 2021 -0500
+
+    Merge branch 'main' of https://github.com/Mad106/OS-Project-1 into main
+
+commit c0fbfa497d7be2d45a242639bfe84cfd02567368
+Author: Ryan Lazzari <rgl12@my.fsu.edu>
+Date:   Tue Jan 19 04:56:20 2021 -0500
+
+    Started the makefile and readme docs. Began the implementation for echo.c, prompt.c, and tilde.c. Parser.c contains code provided to us and some modifications to act as driver program.
+
+commit 55657d686b484348bb777d136e63e4dd82474134
+Author: Madison Sayles <62017672+Mad106@users.noreply.github.com>
+Date:   Mon Jan 18 17:20:40 2021 -0500
+
+    Initial commit

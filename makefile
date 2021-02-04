@@ -1,16 +1,14 @@
 CC = gcc
 FLAGS = -Wall -Wextra -pedantic -std=c99
 
-shell: parser.o prompt.o echo.o tilde.o path.o evariables.o bgjobs.o cd.o piping.o
-	$(CC) $(FLAGS) -o shell parser.o prompt.o echo.o tilde.o path.o evariables.o bgjobs.o cd.o piping.o
+shell: parser.o prompt.o echo.o tilde.o path.o evariables.o bgjobs.o cd.o
+	$(CC) $(FLAGS) -o shell parser.o prompt.o echo.o tilde.o path.o evariables.o bgjobs.o cd.o 
 parser.o: parser.c shell.h
 	$(CC) $(FLAGS) -c parser.c
 prompt.o: prompt.c shell.h
 	$(CC) $(FLAGS) -c prompt.c
 cd.o: cd.c shell.h
 	$(CC) $(FLAGS) -c cd.c
-piping.o: piping.c shell.h
-	$(CC) $(FLAGS) -c piping.c
 echo.o: echo.c shell.h
 	$(CC) $(FLAGS) -c echo.c
 tilde.o: tilde.c shell.h
