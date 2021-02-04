@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <string.h>
 #include "shell.h"
 
 extern void free_tokens(tokenlist *tokens);
@@ -16,9 +12,11 @@ void Jobs(bgjobslist* bg, int showAll, time_t procStart) {
 
 		/* If job is running (status == 0) then we will print all tokens, otherwise 
 		we should drop '&' token, which is last in the list */
-		int totalTokens = status == 0 ? bg->jobs[i]->tokens->size : bg->jobs[i]->tokens->size - 1;
+		int totalTokens = status == 0 ? bg->jobs[i]->tokens->size : bg->jobs[i]->
+			tokens->size - 1;
 
-		/* Print job information if we should print any type of job (completed/running) OR current status of job is "done" */
+		/* Print job information if we should print any type of job (completed/running) 
+		   OR current status of job is "done" */
 		if(showAll || status != 0) {
 			// check for longest proc time
 			time_t procEnd;

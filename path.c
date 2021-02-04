@@ -73,7 +73,7 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 	for(int i = 0; tok != NULL; ++i)
 	{
 		// rellocate the size of separatedPaths to include the path
-		separatedPaths = (char**) realloc(separatedPaths, sizeof(char*) * (i + 1) );//(sizeof(tok)*sizeof(char*))+1+(sizeof(tokens[0])*sizeof(char*)));
+		separatedPaths = (char**) realloc(separatedPaths, sizeof(char*) * (i + 1) );
 		// allocate the amount of space necessary in separatedPaths[i]
 		int len = strlen(tok) + 1 + (strlen(tokens->items[0]));
 		separatedPaths[i] = (char *) malloc(sizeof(char) * (len + 1));
@@ -128,7 +128,7 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 			{
 				/* Input redirect found */	
 				if(redirInput == NULL && strcmp(tokens->items[j], "<") == 0 && j + 1 < tokens->size) 
-				{
+				{					
 					redirInput = tokens->items[j + 1];
 					free(tokens->items[j]);
 					tokens->items[j] = tokens->items[j + 1] = NULL;
@@ -150,8 +150,8 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
             		}
             		if(redirOutput) 
 			{
-				printf("[REDIRECT OUTPUT]=[%s]\n", redirOutput);
             			outFd = open(redirOutput, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+				printf("[REDIRECT OUTPUT]=[%s]\n", redirOutput);
             		}
 		
 			// create fork so shell doesn't shut down
@@ -274,6 +274,13 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 				} else {
 					/* Wait for child */
 					waitpid(pid, NULL, 0);
+
+					// calculate program run time
+					time_t procEnd;
+					time(&procEnd);
+					long procTime = 0;
+					procTime = procEnd - procStart;
+					if(procTime > longestProc) longestProc = procTime;
 				}
 			}
 

@@ -2,8 +2,6 @@
  * NOTES: Do we need to add some type of error checking for null variables?
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "shell.h"
 
 void Prompt()

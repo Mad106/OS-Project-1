@@ -1,6 +1,5 @@
 // Echo command implementation file
 
-#include <stdio.h>
 #include "shell.h"
 
 void Echo(int size, char ** args)

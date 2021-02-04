@@ -1,6 +1,5 @@
 // Tilde Expansion implementation file
 
-#include <stdlib.h>
 #include "shell.h"
 
 char * Tilde()
