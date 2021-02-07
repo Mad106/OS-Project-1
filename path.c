@@ -148,7 +148,8 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					tokens->items[j] = tokens->items[j + 1] = NULL;	
 				}
 				/* Piping found */
-				else if(redirOutput == NULL && redirInput == NULL && strcmp(tokens->items[j], "|") == 0 && j + 1 < tokens->size)
+				else if(redirOutput == NULL && redirInput == NULL && strcmp(tokens->items[j], "|") == 0 && 
+					j + 1 < tokens->size)
 				{
 					piping = true;
 					redirOutput = tokens->items[j - 1];
@@ -185,7 +186,6 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					close(outFd);
 					exit(1);
 				}
-				
 				int pid2 = fork();
 				if(pid2 == 0){
 					close(p_fds[1]);	//close unused end of pipe
@@ -195,13 +195,12 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					close(inFd);
 					exit(1);
 				}
-				
 				close(p_fds[0]);
 				close(p_fds[1]);
-				
+
 				waitpid(pid1,NULL,0);
 				waitpid(pid2,NULL,0);
-				
+
 				execv(separatedPaths[i], tokens->items);
 				exit(-1);
 			}
@@ -280,7 +279,7 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 			return;			
 		}
 	}
-	
+
 	/* Clean up */
 	for(int i = 0; i < size; ++i) { free(separatedPaths[i]); }
 	free(separatedPaths);
