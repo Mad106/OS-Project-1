@@ -162,7 +162,7 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 			/* Open input file */
 			if(redirInput) 
 			{
-	            		inFd = open(redirInput, O_RDONLY);
+						inFd = open(redirInput, O_RDONLY);
 				printf("[REDIRECT INPUT]=[%s]\n", redirInput);
         		}
             		if(redirOutput) 
@@ -184,6 +184,7 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					close(STDOUT_FILENO);
 					dup(outFd);
 					close(outFd);
+					system(redirOutput);
 					exit(1);
 				}
 				int pid2 = fork();
@@ -193,6 +194,7 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					close(STDIN_FILENO);
 					dup(inFd);
 					close(inFd);
+					system(redirInput);
 					exit(1);
 				}
 				close(p_fds[0]);
@@ -215,6 +217,8 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 						close(STDIN_FILENO);
 						dup(inFd);
 						close(inFd);
+						//execute command
+						system(redirInput);
 					}
 
 					if(redirOutput) 
@@ -222,6 +226,8 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 						close(STDOUT_FILENO);
 						dup(outFd);
 						close(outFd);
+						//execute command
+						system(redirOutput);
 					}
 					
 					execv(separatedPaths[i], tokens->items);
