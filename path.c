@@ -53,7 +53,6 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 		time_t shellEnd;
 		time(&shellEnd);
 		time_t shellRun = shellEnd - shellStart;
-		long longestProc = 0;
 		printf("Shell ran for %li seconds and took %li seconds to execute one command.\n",
 			shellRun, longestProc);
 		exit(0);
@@ -148,8 +147,8 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					tokens->items[j] = tokens->items[j + 1] = NULL;	
 				}
 				/* Piping found */
-				else if(redirOutput == NULL && redirInput == NULL && strcmp(tokens->items[j], "|") == 0 && 
-					j + 1 < tokens->size)
+				else if(redirOutput == NULL && redirInput == NULL && strcmp(tokens->
+					items[j], "|") == 0 && j + 1 < tokens->size)
 				{
 					piping = true;
 					redirOutput = tokens->items[j - 1];
@@ -161,15 +160,9 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					
 			/* Open input file */
 			if(redirInput) 
-			{
-						inFd = open(redirInput, O_RDONLY);
-				printf("[REDIRECT INPUT]=[%s]\n", redirInput);
-        		}
+				inFd = open(redirInput, O_RDONLY);
             		if(redirOutput) 
-			{
             			outFd = open(redirOutput, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-				printf("[REDIRECT OUTPUT]=[%s]\n", redirOutput);
-            		}
 		
 			/* only used for piping */
 			if(piping)
@@ -179,32 +172,56 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 				
 				int pid1 = fork();
 				if(pid1 == 0){
-					close(p_fds[0]);	//close unused end of pipe
-					//redirect output & command 1
-					close(STDOUT_FILENO);
-					dup(outFd);
-					close(outFd);
-					system(redirOutput);
-					exit(1);
+					close(p_fds[1]);	// close stdout
+					dup(inFd);		// redir out to 2nd pipe command
+					close(inFd);		// close fds
+					close(outFd);		// close fds
+					execv(redirInput, tokens->items); // execute command
+					exit(-1); // exit on error if needed
 				}
+
 				int pid2 = fork();
-				if(pid2 == 0){
-					close(p_fds[1]);	//close unused end of pipe
-					//redirect input & command 2
-					close(STDIN_FILENO);
-					dup(inFd);
-					close(inFd);
-					system(redirInput);
-					exit(1);
+				if(pid2 == 0) {
+					close(p_fds[0]);	// close stdin
+					dup(inFd);		// redir in from first command
+					close(inFd);		// close fds
+					close(outFd);		// close fds
+					execv(redirOutput, tokens->items); // execute command
+					exit(-1); // execute on error if needed
 				}
-				close(p_fds[0]);
-				close(p_fds[1]);
 
-				waitpid(pid1,NULL,0);
-				waitpid(pid2,NULL,0);
-
-				execv(separatedPaths[i], tokens->items);
-				exit(-1);
+				close(inFd); // reset fds for parents
+				close(outFd); // reset fds for parents
+				if(isBG) 
+				{
+					/* Save pid of the child process */
+					bg->jobs[bg->size]->pid = pid1;
+					/* Show message that bg job is running */
+					printf("[%d] %d\n", jobId, pid1);
+					++bg->size;
+					++jobId;
+					//waitpid(pid, NULL, WNOHANG);
+				} 
+				else 
+				{
+					/* Wait for child */
+					waitpid(pid1, NULL, 0);
+				}
+				if(isBG) 
+				{
+					/* Save pid of the child process */
+					bg->jobs[bg->size]->pid = pid2;
+					/* Show message that bg job is running */
+					printf("[%d] %d\n", jobId, pid2);
+					++bg->size;
+					++jobId;
+					//waitpid(pid, NULL, WNOHANG);
+				} 
+				else 
+				{
+					/* Wait for child */
+					waitpid(pid2, NULL, 0);
+				}
 			}
 			else
 			{
@@ -217,8 +234,6 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 						close(STDIN_FILENO);
 						dup(inFd);
 						close(inFd);
-						//execute command
-						system(redirInput);
 					}
 
 					if(redirOutput) 
@@ -226,8 +241,6 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 						close(STDOUT_FILENO);
 						dup(outFd);
 						close(outFd);
-						//execute command
-						system(redirOutput);
 					}
 					
 					execv(separatedPaths[i], tokens->items);
@@ -262,13 +275,6 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					{
 						/* Wait for child */
 						waitpid(pid, NULL, 0);
-
-						// calculate program run time
-						time_t procEnd;
-						time(&procEnd);
-						long procTime = 0;
-						procTime = procEnd - procStart;
-						if(procTime > longestProc) longestProc = procTime;
 					}
 				}
 			}
@@ -281,11 +287,18 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 			/* Zero for "SHOW ONLY COMPLETED", One for "SHOW ALL" */
 			Jobs(bg, 0, procStart); 
 
+			// calculate program run time
+			time_t procEnd;
+			time(&procEnd);
+			long procTime = 0;
+			procTime = procEnd - procStart;
+			if(procTime > longestProc) longestProc = procTime;
+
 			// process complete, return to main
-			return;			
+			return;
 		}
 	}
-
+	
 	/* Clean up */
 	for(int i = 0; i < size; ++i) { free(separatedPaths[i]); }
 	free(separatedPaths);
@@ -337,18 +350,19 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					/* Wait for child */
 					waitpid(pid, NULL, 0);
 
-					// calculate program run time
-					time_t procEnd;
-					time(&procEnd);
-					long procTime = 0;
-					procTime = procEnd - procStart;
-					if(procTime > longestProc) longestProc = procTime;
 				}
 			}
 
 			/* Check background jobs */
 			/* Zero for "SHOW ONLY COMPLETED", One for "SHOW ALL" */
 			Jobs(bg, 0, procStart);
+
+			// calculate program run time
+			time_t procEnd;
+			time(&procEnd);
+			long procTime = 0;
+			procTime = procEnd - procStart;
+			if(procTime > longestProc) longestProc = procTime;
 		
 			// process complete, return to main
 			return;
