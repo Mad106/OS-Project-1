@@ -15,6 +15,7 @@ extern int setenv(const char *name, const char *value, int overwrite);
 extern tokenlist *clone_tokenlist(tokenlist *tokens) ;
 extern void free_tokens(tokenlist *tokens);
 
+char* FindPath(tokenlist*,int);
 
 void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 {
@@ -58,18 +59,19 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 		exit(0);
 	}
 
+
+	// create array of cstrings to hold each directory path
+	char ** separatedPaths = NULL;
+
 	// get copy of $PATH variable
 	char* varPath = getenv("PATH");
 	char * paths = (char*)strdup(varPath);
 	
-	// create array of cstrings to hold each directory path
-	char ** separatedPaths = NULL;
-
 	// separate directories by path - begins outside loop to satisfy
 	// strtok requirement that subsequent calls pass NULL
 	char * tok = strtok(paths, ":");
 	
-	int totalParts = 0;
+	int size = 0;
 	// add paths to separatedPaths and append filename to path
 	for(int i = 0; tok != NULL; ++i)
 	{
@@ -87,12 +89,9 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 
 		// call strtok to get next token
 		tok = strtok(NULL, ":");
-		++totalParts;
+		++size;
 	}
 	free(paths);
-
-	// get number of elements in separatedPaths
-	int size = totalParts;
 
 	/* loop through separatedPaths paths and check for file.
 	 * access() checks if the file exists at that location.
@@ -149,79 +148,84 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 				/* Piping found */
 				else if(redirOutput == NULL && redirInput == NULL && strcmp(tokens->
 					items[j], "|") == 0 && j + 1 < tokens->size)
-				{
+				{ 
 					piping = true;
+					strcpy(tokens->items[j], tokens->items[j+1]);
+					free(tokens->items[j+1]);
+					--tokens->size;
 					redirOutput = tokens->items[j - 1];
-					redirInput = tokens->items[j + 1];
-					free(tokens->items[j]);
-					tokens->items[j] = tokens->items[j + 1] = NULL;
+					redirInput = tokens->items[j];
+
 				}
 			}
 					
 			/* Open input file */
-			if(redirInput) 
-				inFd = open(redirInput, O_RDONLY);
-            		if(redirOutput) 
+            		if(redirOutput)
+			{
+				printf("[REDIR OUTPUT] = %s\n", redirOutput); 
             			outFd = open(redirOutput, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+			}
+			if(redirInput) 
+			{
+				printf("[REDIR INPUT] = %s\n", redirInput);
+				inFd = open(redirInput, O_RDONLY);
+			}
 		
 			/* only used for piping */
 			if(piping)
 			{
+				char * outPath = NULL;
+				outPath = FindPath(tokens, 0);
+				char * inPath = NULL;
+				inPath = FindPath(tokens, 1);
+printf("[outPath] = %s\n[inPath] = %s\n", outPath, inPath);
+for(int i = 0; i < tokens->size; ++i) printf("[%s]\n", tokens->items[i]);fflush(stdout);
+
 				int p_fds[2];
 				pipe(p_fds);
-				
+
 				int pid1 = fork();
 				if(pid1 == 0){
-					close(p_fds[1]);	// close stdout
-					dup(inFd);		// redir out to 2nd pipe command
+					close(p_fds[0]);	// close stdout
+					close(STDOUT_FILENO);
+					dup(p_fds[1]);		// redir out to 2nd pipe command
 					close(inFd);		// close fds
 					close(outFd);		// close fds
-					execv(redirInput, tokens->items); // execute command
-					exit(-1); // exit on error if needed
+					if(outPath != NULL)
+					{
+						execv(outPath, tokens->items); // execute command
+						exit(-1);
+					}
+					else
+					{
+						printf("shell: %s: command not found\n", tokens->items[0]);
+						return;
+					}
+
 				}
 
 				int pid2 = fork();
 				if(pid2 == 0) {
-					close(p_fds[0]);	// close stdin
-					dup(inFd);		// redir in from first command
+					close(p_fds[1]);	// close stdin
+					close(STDIN_FILENO);
+					dup(p_fds[0]);		// redir in from first command
 					close(inFd);		// close fds
 					close(outFd);		// close fds
-					execv(redirOutput, tokens->items); // execute command
-					exit(-1); // execute on error if needed
+					if(inPath != NULL)
+					{
+						execv(inPath, tokens->items); // execute command
+						exit(-1);
+					}
+					else
+					{
+						printf("shell: %s: command not found\n", tokens->items[1]);
+						return;
+					}
 				}
-
 				close(inFd); // reset fds for parents
 				close(outFd); // reset fds for parents
-				if(isBG) 
-				{
-					/* Save pid of the child process */
-					bg->jobs[bg->size]->pid = pid1;
-					/* Show message that bg job is running */
-					printf("[%d] %d\n", jobId, pid1);
-					++bg->size;
-					++jobId;
-					//waitpid(pid, NULL, WNOHANG);
-				} 
-				else 
-				{
-					/* Wait for child */
-					waitpid(pid1, NULL, 0);
-				}
-				if(isBG) 
-				{
-					/* Save pid of the child process */
-					bg->jobs[bg->size]->pid = pid2;
-					/* Show message that bg job is running */
-					printf("[%d] %d\n", jobId, pid2);
-					++bg->size;
-					++jobId;
-					//waitpid(pid, NULL, WNOHANG);
-				} 
-				else 
-				{
-					/* Wait for child */
-					waitpid(pid2, NULL, 0);
-				}
+				waitpid(pid1, NULL, 0);
+				waitpid(pid2, NULL, 0);
 			}
 			else
 			{
@@ -377,4 +381,41 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 	
 	/* Check background jobs */
 	Jobs(bg, 0, procStart); /* Zero for "SHOW ONLY COMPLETED", One for "SHOW ALL" */
+}
+
+char* FindPath(tokenlist * tokens, int j)
+{
+	// get copy of $PATH variable
+	char* varPath = getenv("PATH");
+	char * paths = (char*)strdup(varPath);
+	char * tok = strtok(paths, ":");
+	char ** separatedPaths = NULL;
+
+	int totalParts = 0;
+	for(int i = 0; tok != NULL; ++i)
+	{
+		// rellocate the size of separatedPaths to include the path
+		separatedPaths = (char**) realloc(separatedPaths, sizeof(char*) * (i + 1) );
+		// allocate the amount of space necessary in separatedPaths[i]
+		int len = strlen(tok) + 1 + (strlen(tokens->items[j]));
+		separatedPaths[i] = (char *) malloc(sizeof(char) * (len + 1));
+		memset(separatedPaths[i], 0, sizeof(char) * (len + 1));
+
+
+		// concat the entire filepath into separatedPaths[i]
+		strcpy(separatedPaths[i], tok);
+		strcat(separatedPaths[i], "/");		
+		strcat(separatedPaths[i], tokens->items[j]);
+
+		// call strtok to get next token
+		tok = strtok(NULL, ":");
+		++totalParts;
+	}
+	free(paths);
+
+	for(int i = 0; i < totalParts; ++i)
+		if(access(separatedPaths[i], F_OK) == 0)
+			return separatedPaths[i];
+	//else
+	return NULL;
 }
