@@ -161,15 +161,9 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 					
 			/* Open input file */
             		if(redirOutput)
-			{
-				printf("[REDIR OUTPUT] = %s\n", redirOutput); 
             			outFd = open(redirOutput, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-			}
 			if(redirInput) 
-			{
-				printf("[REDIR INPUT] = %s\n", redirInput);
 				inFd = open(redirInput, O_RDONLY);
-			}
 		
 			/* only used for piping */
 			if(piping)
@@ -178,8 +172,6 @@ void Path(tokenlist *tokens, bgjobslist* bg, time_t procStart)
 				outPath = FindPath(tokens, 0);
 				char * inPath = NULL;
 				inPath = FindPath(tokens, 1);
-printf("[outPath] = %s\n[inPath] = %s\n", outPath, inPath);
-for(int i = 0; i < tokens->size; ++i) printf("[%s]\n", tokens->items[i]);fflush(stdout);
 
 				int p_fds[2];
 				pipe(p_fds);
