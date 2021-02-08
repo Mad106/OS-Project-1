@@ -65,13 +65,7 @@ just enter "shell". To clean up after execution, just type "make clean".
 
 Known Bugs/Incomplete Parts
 ---------------------------
-- Piping does not print output. I believe this may be caused by improperly assigning/re-assigning
-  file descriptors. - Ryan
-
-
-Special Considerations
-----------------------
-
+- Piping prints incorrect output. I'm unable to determine the cause. - Ryan
 
 
 Extra Credit
